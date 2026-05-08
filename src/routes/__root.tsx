@@ -72,18 +72,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Eleições 2026" },
-      { name: "description", content: "Brasil Político 2026: um compasso político interativo para explorar o espectro ideológico brasileiro." },
+      { title: "Lovable App" },
+      { name: "description", content: "Lovable Generated Project" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Eleições 2026" },
-      { property: "og:description", content: "Brasil Político 2026: um compasso político interativo para explorar o espectro ideológico brasileiro." },
+      { property: "og:title", content: "Lovable App" },
+      { property: "og:description", content: "Lovable Generated Project" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Eleições 2026" },
-      { name: "twitter:description", content: "Brasil Político 2026: um compasso político interativo para explorar o espectro ideológico brasileiro." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ab91775d-158d-4763-bcaf-f02fd825d009/id-preview-967fa3ef--29e431e5-b171-4940-be54-ea439b6b038f.lovable.app-1778209539401.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ab91775d-158d-4763-bcaf-f02fd825d009/id-preview-967fa3ef--29e431e5-b171-4940-be54-ea439b6b038f.lovable.app-1778209539401.png" },
     ],
     links: [
       {
