@@ -21,9 +21,12 @@ export const Route = createFileRoute('/')({
 function Page() {
   const [booting, setBooting] = useState(true);
   const reset = useCompass(s => s.reset);
+  const shuffle = useCompass(s => s.shuffle);
   const cursor = useCompass(s => s.cursor);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(560);
+
+  useEffect(() => { shuffle(); }, [shuffle]);
 
   useEffect(() => {
     const calc = () => {

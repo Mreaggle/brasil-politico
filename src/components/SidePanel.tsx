@@ -1,9 +1,10 @@
-import { useCompass } from '@/store/compass';
+import { useCompass, useAffinities } from '@/store/compass';
 import { motion } from 'framer-motion';
 
 export function SidePanel() {
-  const { x, y } = useCompass();
-  const affinities = useCompass(s => s.affinities());
+  const x = useCompass(s => s.x);
+  const y = useCompass(s => s.y);
+  const affinities = useAffinities();
   const trail = useCompass(s => s.trail);
 
   const econ = x < -1 ? 'Coletivista' : x > 1 ? 'Liberal' : 'Centro';

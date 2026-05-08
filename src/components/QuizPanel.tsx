@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCompass, type AnswerValue } from '@/store/compass';
+import { useCompass, useCurrentQuestion, type AnswerValue } from '@/store/compass';
 
 const OPTIONS: { v: AnswerValue; label: string; short: string }[] = [
   { v: -2, label: 'Discordo totalmente', short: '−−' },
@@ -10,13 +10,13 @@ const OPTIONS: { v: AnswerValue; label: string; short: string }[] = [
 ];
 
 export function QuizPanel() {
-  const q = useCompass(s => s.current());
+  const q = useCurrentQuestion();
   const cursor = useCompass(s => s.cursor);
   const answer = useCompass(s => s.answer);
   const skip = useCompass(s => s.skip);
+  const total = useCompass(s => s.queue.length);
 
   if (!q) return null;
-  const total = useCompass.getState().queue.length;
   const progress = ((cursor % total) / total) * 100;
 
   return (
