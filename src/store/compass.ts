@@ -70,17 +70,22 @@ export function useCurrentQuestion(): Question | null {
   return questions.find(q => q.id === id) ?? null;
 }
 
-export function useAffinities() {
+export function useAffinities(limit = 8) {
   const x = useCompass(s => s.x);
   const y = useCompass(s => s.y);
+  const cursor = useCompass(s => s.cursor);
   const maxDist = Math.sqrt(800);
   const list = ideologies.map(i => {
     const d = Math.sqrt((i.x - x) ** 2 + (i.y - y) ** 2);
-    const pct = Math.max(0, Math.round((1 - d / maxDist) * 100));
-    return { id: i.id, name: i.name, pct, color: i.color };
+    // Antes de qualquer resposta, todas as afinidades começam em 0%.
+    // Confiança cresce conforme o usuário responde (saturando perto de ~25 respostas).
+    const confidence = Math.min(1, cursor / 25);
+    const raw = Math.max(0, 1 - d / maxDist);
+    const pct = Math.round(raw * 100 * confidence);
+    return { id: i.id, name: i.name, pct, color: i.color, x: i.x, y: i.y };
   });
   list.sort((a, b) => b.pct - a.pct);
-  return list.slice(0, 6);
+  return list.slice(0, limit);
 }
 
 function clamp(v: number, a: number, b: number) { return Math.max(a, Math.min(b, v)); }
