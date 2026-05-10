@@ -24,7 +24,7 @@ function Page() {
   const shuffle = useCompass(s => s.shuffle);
   const cursor = useCompass(s => s.cursor);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState(560);
+  const [dims, setDims] = useState({ w: 800, h: 520 });
 
   useEffect(() => { shuffle(); }, [shuffle]);
 
@@ -33,8 +33,7 @@ function Page() {
       const el = wrapRef.current;
       if (!el) return;
       const r = el.getBoundingClientRect();
-      const s = Math.floor(Math.min(r.width, r.height));
-      setSize(Math.max(280, s));
+      setDims({ w: Math.max(320, Math.floor(r.width)), h: Math.max(280, Math.floor(r.height)) });
     };
     calc();
     const ro = new ResizeObserver(calc);
@@ -47,7 +46,6 @@ function Page() {
     <div className="min-h-screen h-screen w-screen overflow-hidden text-foreground relative">
       {booting && <BootScreen onDone={() => setBooting(false)} />}
 
-      {/* ambient glow */}
       <div className="pointer-events-none absolute inset-0 opacity-60"
         style={{ background: 'radial-gradient(circle at 80% -10%, color-mix(in oklch, var(--brasil-green) 25%, transparent), transparent 50%), radial-gradient(circle at -10% 110%, color-mix(in oklch, var(--brasil-blue) 30%, transparent), transparent 50%)' }} />
 
@@ -55,14 +53,14 @@ function Page() {
         <Header onReset={reset} answered={cursor} />
 
         <main className="flex-1 min-h-0 px-3 md:px-5 pb-3 md:pb-5">
-          <div className="h-full grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-4">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
             <div className="hidden lg:block overflow-y-auto pr-1 [scrollbar-width:thin]">
               <SidePanel />
             </div>
 
             <div className="flex flex-col gap-4 min-h-0">
-              <div ref={wrapRef} className="flex-1 min-h-0 flex items-center justify-center">
-                <Compass size={size} />
+              <div ref={wrapRef} className="flex-1 min-h-0 w-full">
+                <Compass width={dims.w} height={dims.h} />
               </div>
               <div className="shrink-0">
                 <QuizPanel />
