@@ -21,7 +21,7 @@ export function RankingPanel() {
         <div className="text-[9px] font-mono opacity-50 mb-2">
           {Math.round(total).toLocaleString('pt-BR')} sinais agregados em tempo real
         </div>
-        <div className="flex-1 min-h-0 flex flex-col justify-between gap-1">
+        <div className="flex-1 min-h-0 scroll-cyber pr-1.5 flex flex-col gap-1">
           <AnimatePresence initial={false}>
             {list.map((a, i) => (
               <motion.div
@@ -68,7 +68,7 @@ export function RankingPanel() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="prose prose-invert prose-sm max-w-none [&_h1]:text-sm [&_h1]:font-semibold [&_h1]:mb-1 [&_h1]:text-foreground [&_p]:text-[10.5px] [&_p]:leading-snug [&_p]:my-1 [&_p]:opacity-80 [&_strong]:text-foreground max-h-[180px] overflow-hidden"
+            className="prose prose-invert prose-sm max-w-none [&_h1]:text-sm [&_h1]:font-semibold [&_h1]:mb-1 [&_h1]:text-foreground [&_p]:text-[10.5px] [&_p]:leading-snug [&_p]:my-1 [&_p]:opacity-80 [&_strong]:text-foreground max-h-[180px] scroll-cyber pr-1.5"
           >
             <ReactMarkdown>{top.markdown}</ReactMarkdown>
           </motion.div>
