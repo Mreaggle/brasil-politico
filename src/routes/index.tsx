@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Compass } from '@/components/Compass';
 import { QuizPanel } from '@/components/QuizPanel';
 import { SidePanel } from '@/components/SidePanel';
+import { RankingPanel } from '@/components/RankingPanel';
 import { BootScreen } from '@/components/BootScreen';
 import { useCompass } from '@/store/compass';
 
