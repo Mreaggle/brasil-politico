@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 export function SidePanel() {
   const x = useCompass(s => s.x);
   const y = useCompass(s => s.y);
-  const affinities = useAffinities(6);
+  const affinities = useAffinities(20);
   const trail = useCompass(s => s.trail);
 
   const econ = x < -1 ? 'Coletivista' : x > 1 ? 'Liberal' : 'Centro';
@@ -23,7 +23,7 @@ export function SidePanel() {
       </Card>
 
       <Card title="AFINIDADES IDEOLÓGICAS" badge={`TOP ${affinities.length}`} className="flex-1 min-h-0 flex flex-col">
-        <div className="flex-1 min-h-0 flex flex-col justify-between gap-1.5">
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-1">
           {affinities.map((a, i) => (
             <div key={a.id} className="group">
               <div className="flex items-center justify-between text-[11px] font-mono mb-0.5">

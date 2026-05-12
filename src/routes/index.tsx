@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Compass } from '@/components/Compass';
 import { QuizPanel } from '@/components/QuizPanel';
 import { SidePanel } from '@/components/SidePanel';
+import { RankingPanel } from '@/components/RankingPanel';
 import { BootScreen } from '@/components/BootScreen';
 import { useCompass } from '@/store/compass';
 
@@ -23,10 +24,12 @@ function Page() {
   const reset = useCompass(s => s.reset);
   const shuffle = useCompass(s => s.shuffle);
   const cursor = useCompass(s => s.cursor);
+  const startSimulation = useCompass(s => s.startSimulation);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 800, h: 520 });
 
   useEffect(() => { shuffle(); }, [shuffle]);
+  useEffect(() => startSimulation(), [startSimulation]);
 
   useEffect(() => {
     const calc = () => {
@@ -53,12 +56,12 @@ function Page() {
         <Header onReset={reset} answered={cursor} />
 
         <main className="flex-1 min-h-0 px-3 md:px-5 pb-3 md:pb-5">
-          <div className="h-full grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-[300px_1fr_320px] gap-4">
             <div className="hidden lg:block h-full min-h-0 overflow-hidden">
               <SidePanel />
             </div>
 
-            <div className="flex flex-col gap-4 min-h-0">
+            <div className="flex flex-col gap-3 min-h-0">
               <div ref={wrapRef} className="flex-1 min-h-0 w-full">
                 <Compass width={dims.w} height={dims.h} />
               </div>
@@ -66,10 +69,15 @@ function Page() {
                 <QuizPanel />
               </div>
             </div>
+
+            <div className="hidden lg:block h-full min-h-0 overflow-hidden">
+              <RankingPanel />
+            </div>
           </div>
 
-          <div className="lg:hidden mt-4">
+          <div className="lg:hidden mt-4 space-y-4">
             <SidePanel />
+            <RankingPanel />
           </div>
         </main>
       </div>
