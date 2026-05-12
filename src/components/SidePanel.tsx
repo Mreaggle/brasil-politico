@@ -23,7 +23,7 @@ export function SidePanel() {
       </Card>
 
       <Card title="AFINIDADES IDEOLÓGICAS" badge={`TOP ${affinities.length}`} className="flex-1 min-h-0 flex flex-col">
-        <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-1">
+        <div className="flex-1 min-h-0 scroll-cyber pr-1.5 flex flex-col gap-1">
           {affinities.map((a, i) => (
             <div key={a.id} className="group">
               <div className="flex items-center justify-between text-[11px] font-mono mb-0.5">
