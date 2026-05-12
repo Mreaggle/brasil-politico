@@ -54,7 +54,7 @@ function Page() {
 
         <main className="flex-1 min-h-0 px-3 md:px-5 pb-3 md:pb-5">
           <div className="h-full grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
-            <div className="hidden lg:block overflow-y-auto pr-1 [scrollbar-width:thin]">
+            <div className="hidden lg:block h-full min-h-0 overflow-hidden">
               <SidePanel />
             </div>
 
