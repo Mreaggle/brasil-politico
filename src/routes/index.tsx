@@ -80,11 +80,6 @@ function Page() {
             <RankingPanel />
           </div>
         </main>
-
-          <div className="lg:hidden mt-4">
-            <SidePanel />
-          </div>
-        </main>
       </div>
     </div>
   );
