@@ -68,7 +68,7 @@ export function RankingPanel() {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="prose prose-invert prose-sm max-w-none [&_h1]:text-sm [&_h1]:font-semibold [&_h1]:mb-1 [&_h1]:text-foreground [&_p]:text-[10.5px] [&_p]:leading-snug [&_p]:my-1 [&_p]:opacity-80 [&_strong]:text-foreground max-h-[180px] overflow-hidden"
+            className="prose prose-invert prose-sm max-w-none [&_h1]:text-sm [&_h1]:font-semibold [&_h1]:mb-1 [&_h1]:text-foreground [&_p]:text-[10.5px] [&_p]:leading-snug [&_p]:my-1 [&_p]:opacity-80 [&_strong]:text-foreground max-h-[180px] scroll-cyber pr-1.5"
           >
             <ReactMarkdown>{top.markdown}</ReactMarkdown>
           </motion.div>
