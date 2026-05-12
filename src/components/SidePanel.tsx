@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 export function SidePanel() {
   const x = useCompass(s => s.x);
   const y = useCompass(s => s.y);
-  const affinities = useAffinities(6);
+  const affinities = useAffinities(20);
   const trail = useCompass(s => s.trail);
 
   const econ = x < -1 ? 'Coletivista' : x > 1 ? 'Liberal' : 'Centro';
