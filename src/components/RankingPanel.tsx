@@ -1,6 +1,7 @@
-import { useGlobalRanking } from '@/store/compass';
-import { motion, AnimatePresence } from 'framer-motion';
-import ReactMarkdown from 'react-markdown';
+import { useGlobalRanking } from "@/store/compass";
+import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import { getIdeologyFigures } from "@/data/ideologyFigures";
 
 export function RankingPanel() {
   const { list, total } = useGlobalRanking(20);
@@ -19,7 +20,7 @@ export function RankingPanel() {
           </span>
         </div>
         <div className="text-[9px] font-mono opacity-50 mb-2">
-          {Math.round(total).toLocaleString('pt-BR')} sinais agregados em tempo real
+          {Math.round(total).toLocaleString("pt-BR")} sinais agregados em tempo real
         </div>
         <div className="flex-1 min-h-0 scroll-cyber pr-1.5 flex flex-col gap-1">
           <AnimatePresence initial={false}>
@@ -27,13 +28,18 @@ export function RankingPanel() {
               <motion.div
                 key={a.id}
                 layout
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="group"
               >
                 <div className="flex items-center justify-between text-[10.5px] font-mono mb-0.5">
                   <span className="flex items-center gap-1.5 min-w-0">
-                    <span className="opacity-50 w-4 shrink-0 text-right">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: a.color, boxShadow: `0 0 6px ${a.color}` }} />
+                    <span className="opacity-50 w-4 shrink-0 text-right">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ background: a.color, boxShadow: `0 0 6px ${a.color}` }}
+                    />
                     <span className="opacity-90 truncate">{a.name}</span>
                   </span>
                   <span className="opacity-70 shrink-0 ml-2" style={{ color: a.color }}>
@@ -44,7 +50,7 @@ export function RankingPanel() {
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${(a.count / max) * 100}%` }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                     className="h-full rounded-full"
                     style={{ background: a.color, boxShadow: `0 0 6px ${a.color}` }}
                   />
@@ -56,12 +62,21 @@ export function RankingPanel() {
       </div>
 
       {top && (
-        <div className="glass rounded-lg p-3 hud-corner shrink-0" style={{ borderColor: top.color, boxShadow: `0 0 24px color-mix(in oklch, ${top.color} 18%, transparent)` }}>
+        <div
+          className="glass rounded-lg p-3 hud-corner shrink-0"
+          style={{
+            borderColor: top.color,
+            boxShadow: `0 0 24px color-mix(in oklch, ${top.color} 18%, transparent)`,
+          }}
+        >
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-[10px] font-mono tracking-[0.3em] text-cyber-cyan text-glow">
               CORRENTE EM ALTA · #1
             </h3>
-            <span className="w-2 h-2 rounded-full" style={{ background: top.color, boxShadow: `0 0 10px ${top.color}` }} />
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ background: top.color, boxShadow: `0 0 10px ${top.color}` }}
+            />
           </div>
           <motion.div
             key={top.id}
@@ -72,6 +87,17 @@ export function RankingPanel() {
           >
             <ReactMarkdown>{top.markdown}</ReactMarkdown>
           </motion.div>
+          <div className="mt-2 pt-2 border-t border-border/60">
+            <div className="text-[9px] font-mono tracking-[0.2em] text-cyber-cyan mb-1">
+              FIGURAS EM DESTAQUE
+            </div>
+            {getIdeologyFigures(top).map((figure) => (
+              <div key={figure.name} className="text-[9.5px] leading-snug mb-1">
+                <strong>{figure.name}</strong>
+                <span className="opacity-60"> — {figure.note}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </aside>
