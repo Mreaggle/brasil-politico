@@ -6,7 +6,9 @@ import { SidePanel } from "@/components/SidePanel";
 import { RankingPanel } from "@/components/RankingPanel";
 import { BootScreen } from "@/components/BootScreen";
 import { ElectionPanel } from "@/components/ElectionPanel";
+import { SupportModal } from "@/components/SupportModal";
 import { useCompass } from "@/store/compass";
+import { HeartHandshake, RotateCcw } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,6 +33,7 @@ export const Route = createFileRoute("/")({
 export function Page() {
   const [booting, setBooting] = useState(true);
   const [activeTab, setActiveTab] = useState<"compass" | "election">("compass");
+  const [supportOpen, setSupportOpen] = useState(false);
   const reset = useCompass((s) => s.reset);
   const shuffle = useCompass((s) => s.shuffle);
   const startSimulation = useCompass((s) => s.startSimulation);
@@ -60,7 +63,7 @@ export function Page() {
   }, [booting]);
 
   return (
-    <div className="min-h-screen h-screen w-screen overflow-hidden text-foreground relative">
+    <div className="h-[100dvh] min-h-[100dvh] w-full overflow-hidden text-foreground relative">
       {booting && <BootScreen onDone={() => setBooting(false)} />}
 
       <div
@@ -72,17 +75,26 @@ export function Page() {
       />
 
       <div className="relative z-10 h-full flex flex-col">
-        <Header activeTab={activeTab} onTabChange={setActiveTab} onReset={reset} />
+        <Header
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onReset={reset}
+          onOpenSupport={() => setSupportOpen(true)}
+          supportOpen={supportOpen}
+        />
 
         {activeTab === "compass" ? (
-          <main className="flex-1 min-h-0 px-3 md:px-5 pb-3 md:pb-5 overflow-y-auto lg:overflow-hidden scroll-cyber">
-            <div className="h-full grid grid-cols-1 lg:grid-cols-[300px_1fr_320px] gap-4">
+          <main className="flex-1 min-h-0 px-2.5 sm:px-3 md:px-5 pb-3 md:pb-5 overflow-y-auto lg:overflow-hidden scroll-cyber">
+            <div className="min-h-full lg:h-full grid grid-cols-1 lg:grid-cols-[300px_1fr_320px] gap-3 lg:gap-4">
               <div className="hidden lg:block h-full min-h-0 overflow-hidden">
                 <SidePanel />
               </div>
 
-              <div className="flex flex-col gap-3 min-h-0">
-                <div ref={wrapRef} className="flex-1 min-h-0 w-full">
+              <div className="flex flex-col gap-3 min-h-0 pt-3 lg:pt-0">
+                <div
+                  ref={wrapRef}
+                  className="h-[min(56vh,480px)] min-h-[350px] sm:h-[520px] lg:h-auto lg:flex-1 lg:min-h-0 w-full"
+                >
                   <Compass width={dims.w} height={dims.h} />
                 </div>
                 <div className="shrink-0">
@@ -95,7 +107,7 @@ export function Page() {
               </div>
             </div>
 
-            <div className="lg:hidden mt-4 space-y-4">
+            <div className="lg:hidden mt-3 space-y-3 pb-[max(0px,env(safe-area-inset-bottom))]">
               <SidePanel />
               <RankingPanel />
             </div>
@@ -106,6 +118,8 @@ export function Page() {
           </main>
         )}
       </div>
+
+      {supportOpen && <SupportModal onClose={() => setSupportOpen(false)} />}
     </div>
   );
 }
@@ -114,48 +128,64 @@ function Header({
   activeTab,
   onTabChange,
   onReset,
+  onOpenSupport,
+  supportOpen,
 }: {
   activeTab: "compass" | "election";
   onTabChange: (tab: "compass" | "election") => void;
   onReset: () => void;
+  onOpenSupport: () => void;
+  supportOpen: boolean;
 }) {
   return (
-    <header className="px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-border/50">
-      <div className="flex items-center gap-3">
+    <header className="px-3 md:px-6 py-2.5 md:py-3 grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-3 border-b border-border/50">
+      <div className="flex items-center gap-2.5 md:gap-3 min-w-0">
         <Logo />
-        <div>
-          <h1 className="text-sm md:text-base font-semibold tracking-tight">
+        <div className="min-w-0">
+          <h1 className="text-[13px] md:text-base font-semibold tracking-tight whitespace-nowrap">
             BRASIL POLÍTICO <span className="text-accent text-glow">2026</span>
           </h1>
-          <div className="text-[10px] font-mono opacity-60 tracking-widest">
+          <div className="hidden sm:block text-[10px] font-mono opacity-60 tracking-widest truncate">
             CENTRAL · MAPA IDEOLÓGICO INTERATIVO
           </div>
         </div>
       </div>
-      <div className="order-3 md:order-none basis-full md:basis-auto flex items-center justify-center rounded-md border border-border/70 p-1 bg-background/30">
+      <div className="order-3 md:order-none col-span-2 md:col-span-1 flex items-center justify-center rounded-md border border-border/70 p-1 bg-background/30">
         <button
           onClick={() => onTabChange("compass")}
-          className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest transition-all ${activeTab === "compass" ? "bg-cyber-cyan/10 text-cyber-cyan text-glow" : "opacity-60 hover:opacity-100"}`}
+          className={`flex-1 md:flex-none px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "compass" ? "bg-cyber-cyan/10 text-cyber-cyan text-glow" : "opacity-60 hover:opacity-100"}`}
         >
           MAPA IDEOLÓGICO
         </button>
         <button
           onClick={() => onTabChange("election")}
-          className={`px-3 py-1.5 rounded text-[10px] font-mono tracking-widest transition-all ${activeTab === "election" ? "bg-accent/10 text-accent text-glow" : "opacity-60 hover:opacity-100"}`}
+          className={`flex-1 md:flex-none px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "election" ? "bg-accent/10 text-accent text-glow" : "opacity-60 hover:opacity-100"}`}
         >
           ELEIÇÕES 2026
         </button>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-end gap-1.5 md:gap-3">
         <div className="hidden md:flex items-center gap-2 text-[10px] font-mono opacity-70">
           <span className="w-1.5 h-1.5 rounded-full bg-primary blink" />
           PAINEL ATIVO
         </div>
         <button
-          onClick={onReset}
-          className={`${activeTab === "election" ? "invisible" : ""} text-[10px] font-mono px-3 py-1.5 rounded border border-border hover:border-accent hover:text-accent transition-colors tracking-widest`}
+          onClick={onOpenSupport}
+          className="support-trigger"
+          aria-haspopup="dialog"
+          aria-expanded={supportOpen}
         >
-          RESET ⟲
+          <HeartHandshake size={15} aria-hidden="true" />
+          <span>APOIAR</span>
+        </button>
+        <button
+          onClick={onReset}
+          aria-label="Reiniciar mapa ideológico"
+          title="Reiniciar mapa ideológico"
+          className={`${activeTab === "election" ? "invisible" : ""} mobile-reset inline-flex items-center gap-1.5 text-[10px] font-mono p-2 md:px-3 md:py-1.5 rounded border border-border hover:border-accent hover:text-accent transition-colors tracking-widest`}
+        >
+          <span className="hidden md:inline">RESET</span>
+          <RotateCcw size={13} aria-hidden="true" />
         </button>
       </div>
     </header>
@@ -165,7 +195,7 @@ function Header({
 function Logo() {
   return (
     <div
-      className="relative w-9 h-9 rounded-md flex items-center justify-center"
+      className="relative w-8 h-8 md:w-9 md:h-9 rounded-md flex items-center justify-center shrink-0"
       style={{
         background:
           "conic-gradient(from 0deg, var(--brasil-green), var(--brasil-yellow), var(--brasil-blue), var(--brasil-green))",

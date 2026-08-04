@@ -20,18 +20,20 @@ export function QuizPanel() {
   const progress = ((cursor % total) / total) * 100;
 
   return (
-    <div className="glass-strong rounded-lg p-4 hud-corner">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
+    <div className="glass-strong rounded-lg p-3 sm:p-4 hud-corner">
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <span className="text-[10px] font-mono tracking-widest text-cyber-cyan text-glow">
             PROPOSIÇÃO
           </span>
           <span className="text-[10px] font-mono opacity-60">#{String(q.id).padStart(3, "0")}</span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded border border-border opacity-80">
+          <span className="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded border border-border opacity-80 truncate">
             {q.category}
           </span>
         </div>
-        <div className="text-[10px] font-mono opacity-60">QUESTÃO EM ANÁLISE</div>
+        <div className="hidden sm:block text-[10px] font-mono opacity-60 shrink-0">
+          QUESTÃO EM ANÁLISE
+        </div>
       </div>
 
       <div className="h-px bg-border/60 mb-3 relative overflow-hidden">
@@ -52,7 +54,7 @@ export function QuizPanel() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.25 }}
-          className="text-lg md:text-xl font-medium leading-snug mb-4"
+          className="text-base sm:text-lg md:text-xl font-medium leading-snug mb-4"
         >
           "{q.text}"
         </motion.h2>
@@ -63,7 +65,7 @@ export function QuizPanel() {
           <button
             key={opt.v}
             onClick={() => answer(q.id, opt.v)}
-            className="group relative px-3 py-2 rounded border border-border/70 hover:border-cyber-cyan transition-all text-xs font-mono tracking-wider hover:bg-cyber-cyan/5"
+            className="group relative px-2 sm:px-3 py-2 rounded border border-border/70 hover:border-cyber-cyan transition-all text-xs font-mono tracking-wider hover:bg-cyber-cyan/5 last:col-span-2 sm:last:col-span-1"
           >
             <span className="block text-base font-semibold text-cyber-cyan group-hover:text-glow">
               {opt.short}
@@ -73,8 +75,8 @@ export function QuizPanel() {
         ))}
       </div>
 
-      <div className="mt-3 flex items-center justify-between text-[10px] font-mono opacity-60">
-        <span>
+      <div className="mt-3 flex items-center justify-between gap-2 text-[9px] sm:text-[10px] font-mono opacity-60">
+        <span className="truncate">
           peso vetorial · X {q.axisX.toFixed(1)} · Y {q.axisY.toFixed(1)}
         </span>
         <button onClick={skip} className="hover:text-cyber-cyan transition-colors">

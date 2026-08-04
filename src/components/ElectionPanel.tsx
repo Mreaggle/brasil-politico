@@ -76,7 +76,7 @@ export function ElectionPanel() {
             {candidates.map((candidate, index) => (
               <div
                 key={candidate.id}
-                className="grid grid-cols-[36px_minmax(110px,220px)_1fr_44px] items-center gap-3"
+                className="grid grid-cols-[24px_minmax(92px,220px)_1fr_40px] sm:grid-cols-[36px_minmax(110px,220px)_1fr_44px] items-center gap-2 sm:gap-3"
               >
                 <span className="text-sm font-mono opacity-40">
                   {String(index + 1).padStart(2, "0")}

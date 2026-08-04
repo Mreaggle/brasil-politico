@@ -166,7 +166,7 @@ export function Compass({ width, height }: Props) {
               }}
             />
             <span
-              className="absolute text-[9px] font-mono tracking-wider whitespace-nowrap text-foreground/70 group-hover:text-foreground"
+              className={`absolute text-[8px] sm:text-[9px] font-mono tracking-wide sm:tracking-wider whitespace-nowrap text-foreground/70 group-hover:text-foreground ${isTop ? "block" : "hidden sm:block"}`}
               style={{
                 left: lx,
                 top: ly,
@@ -233,7 +233,7 @@ export function Compass({ width, height }: Props) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="absolute glass-strong rounded-md p-4 max-w-sm pointer-events-none hud-corner z-20"
+            className="absolute glass-strong rounded-md p-3 sm:p-4 max-w-[calc(100%-16px)] sm:max-w-sm pointer-events-none hud-corner z-20"
             style={{
               left: clampPx(mouse.mx + 18, width, 380),
               top: clampPx(mouse.my + 18, height, 280),
@@ -281,7 +281,7 @@ function clampPx(v: number, container: number, tipSize: number) {
 function Label({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <div
-      className={`absolute font-mono text-[10px] tracking-[0.4em] text-cyber-cyan opacity-80 ${className}`}
+      className={`absolute font-mono text-[8px] sm:text-[10px] tracking-[0.22em] sm:tracking-[0.4em] text-cyber-cyan opacity-80 ${className}`}
     >
       {children}
     </div>
@@ -296,13 +296,15 @@ function QuadrantTitle({
   pos: "tl" | "tr" | "bl" | "br";
 }) {
   const map = {
-    tl: "top-6 left-6 text-left",
-    tr: "top-6 right-6 text-right",
-    bl: "bottom-6 left-6 text-left",
-    br: "bottom-6 right-6 text-right",
+    tl: "top-6 left-3 sm:left-6 text-left",
+    tr: "top-6 right-3 sm:right-6 text-right",
+    bl: "bottom-6 left-3 sm:left-6 text-left",
+    br: "bottom-6 right-3 sm:right-6 text-right",
   };
   return (
-    <div className={`absolute ${map[pos]} font-mono text-[10px] tracking-[0.3em] opacity-50`}>
+    <div
+      className={`absolute ${map[pos]} font-mono text-[8px] sm:text-[10px] tracking-[0.16em] sm:tracking-[0.3em] opacity-50`}
+    >
       {children}
     </div>
   );
