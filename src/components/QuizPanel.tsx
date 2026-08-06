@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useCompass, useCurrentQuestion, type AnswerValue } from "@/store/compass";
+import { ShareIdeology } from "@/components/ShareIdeology";
 
 const OPTIONS: { v: AnswerValue; label: string; short: string }[] = [
   { v: -2, label: "Discordo totalmente", short: "−−" },
@@ -83,6 +84,8 @@ export function QuizPanel() {
           pular ›
         </button>
       </div>
+
+      <ShareIdeology />
     </div>
   );
 }
