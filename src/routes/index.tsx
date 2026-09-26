@@ -35,13 +35,8 @@ export function Page() {
   const [activeTab, setActiveTab] = useState<PageTab>("compass");
   const [supportOpen, setSupportOpen] = useState(false);
   const reset = useCompass((s) => s.reset);
-  const shuffle = useCompass((s) => s.shuffle);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 800, h: 520 });
-
-  useEffect(() => {
-    shuffle();
-  }, [shuffle]);
 
   useEffect(() => {
     const calc = () => {

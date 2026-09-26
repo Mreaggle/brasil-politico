@@ -196,7 +196,8 @@ export function AboutPanel({ onOpenMap, onOpenElection, onOpenSupport }: AboutPa
           <div className="about-reset-note">
             <RotateCcw size={16} aria-hidden="true" />
             <span>
-              <strong>Reset</strong> reinicia o mapa e apaga as respostas desta sessão.
+              <strong>Reset</strong> reinicia o mapa, apaga as respostas desta sessão e embaralha as
+              proposições novamente.
             </span>
           </div>
         </div>

@@ -45,7 +45,7 @@
 4. Após **30 respostas**, selecione **Criar meu card**. O contador mostra quantas faltam: vermelho no início, amarelo quando faltam 15 ou menos e verde quando o card está liberado.
 5. No card, escolha **Compartilhar por apps**, **Baixar imagem** ou **Copiar link**. O link da página também pode ser copiado antes de responder.
 
-Você pode continuar respondendo depois da 30ª pergunta. **Reset** reinicia seu mapa e suas respostas. A página não exige que você responda às 428 proposições.
+Você pode continuar respondendo depois da 30ª pergunta. **Reset** reinicia seu mapa e suas respostas e embaralha novamente as proposições. A página não exige que você responda às 428 proposições.
 
 ## Como ler o resultado
 

@@ -14,8 +14,6 @@ type State = {
   queue: number[];
   cursor: number;
   trail: Trail[];
-  shuffled: boolean;
-  shuffle: () => void;
   answer: (qId: number, v: AnswerValue) => void;
   skip: () => void;
   reset: () => void;
@@ -23,24 +21,22 @@ type State = {
 
 const initialQueue = questions.map((q) => q.id);
 
-export const useCompass = create<State>((set, get) => ({
+function shuffledQueue() {
+  const queue = [...initialQueue];
+  for (let i = queue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+  return queue;
+}
+
+export const useCompass = create<State>((set) => ({
   x: 0,
   y: 0,
   answers: {},
-  queue: initialQueue,
+  queue: shuffledQueue(),
   cursor: 0,
   trail: [{ x: 0, y: 0, t: 0 }],
-  shuffled: false,
-  shuffle: () => {
-    if (get().shuffled) return;
-    const currentEvents = [425, 426, 427, 428];
-    const arr = initialQueue.filter((id) => !currentEvents.includes(id));
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    set({ queue: [...currentEvents, ...arr], shuffled: true });
-  },
   answer: (qId, v) => {
     const q = questions.find((x) => x.id === qId);
     if (!q) return;
@@ -61,7 +57,15 @@ export const useCompass = create<State>((set, get) => ({
     });
   },
   skip: () => set((s) => ({ cursor: s.cursor + 1 })),
-  reset: () => set({ x: 0, y: 0, answers: {}, cursor: 0, trail: [{ x: 0, y: 0, t: 0 }] }),
+  reset: () =>
+    set({
+      x: 0,
+      y: 0,
+      answers: {},
+      queue: shuffledQueue(),
+      cursor: 0,
+      trail: [{ x: 0, y: 0, t: 0 }],
+    }),
 }));
 
 export function useCurrentQuestion(): Question | null {
