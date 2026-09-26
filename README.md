@@ -51,7 +51,7 @@ Você pode continuar respondendo depois da 30ª pergunta. **Reset** reinicia seu
 
 O mapa usa dois eixos: **esquerda ↔ direita econômica** na horizontal e **libertário ↔ autoritário** na vertical. Cada proposição tem uma direção e uma intensidade definidas editorialmente. Concordar move seu ponto nessa direção; discordar o move no sentido oposto; uma resposta neutra não desloca o ponto.
 
-As afinidades são calculadas pela **distância entre pontos no mapa**. A corrente e o candidato mostrados no card são os mais próximos da sua posição naquele momento. Os percentuais de proximidade pertencem a esse modelo geométrico: **não significam chance de voto, apoio político ou concordância com todas as propostas**.
+As afinidades são calculadas pela **distância entre pontos no mapa**. No ranking das correntes, o percentual também aumenta conforme você responde, até completar 30 respostas. A corrente e o candidato mostrados no card são os mais próximos da sua posição naquele momento. Os percentuais de proximidade pertencem a esse modelo: **não significam chance de voto, apoio político ou concordância com todas as propostas**.
 
 Os pontos e títulos dos candidatos são interpretações dos planos de governo e de falas públicas recentes. Não são posições declaradas pelas campanhas nem endossos. Uma pessoa pode concordar com propostas de candidatos diferentes sem caber integralmente em uma única classificação.
 

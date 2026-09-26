@@ -5,6 +5,7 @@ import { QuizPanel } from "@/components/QuizPanel";
 import { SidePanel } from "@/components/SidePanel";
 import { RankingPanel } from "@/components/RankingPanel";
 import { ElectionPanel } from "@/components/ElectionPanel";
+import { AboutPanel } from "@/components/AboutPanel";
 import { SupportModal } from "@/components/SupportModal";
 import { useCompass } from "@/store/compass";
 import { HeartHandshake, RotateCcw } from "lucide-react";
@@ -28,8 +29,10 @@ export const Route = createFileRoute("/")({
   component: Page,
 });
 
+type PageTab = "compass" | "election" | "about";
+
 export function Page() {
-  const [activeTab, setActiveTab] = useState<"compass" | "election">("compass");
+  const [activeTab, setActiveTab] = useState<PageTab>("compass");
   const [supportOpen, setSupportOpen] = useState(false);
   const reset = useCompass((s) => s.reset);
   const shuffle = useCompass((s) => s.shuffle);
@@ -100,9 +103,17 @@ export function Page() {
               </div>
             </div>
           </main>
-        ) : (
+        ) : activeTab === "election" ? (
           <main className="flex-1 min-h-0 overflow-y-auto scroll-cyber">
             <ElectionPanel />
+          </main>
+        ) : (
+          <main className="flex-1 min-h-0 overflow-y-auto scroll-cyber">
+            <AboutPanel
+              onOpenMap={() => setActiveTab("compass")}
+              onOpenElection={() => setActiveTab("election")}
+              onOpenSupport={() => setSupportOpen(true)}
+            />
           </main>
         )}
       </div>
@@ -119,14 +130,14 @@ function Header({
   onOpenSupport,
   supportOpen,
 }: {
-  activeTab: "compass" | "election";
-  onTabChange: (tab: "compass" | "election") => void;
+  activeTab: PageTab;
+  onTabChange: (tab: PageTab) => void;
   onReset: () => void;
   onOpenSupport: () => void;
   supportOpen: boolean;
 }) {
   return (
-    <header className="px-3 md:px-6 py-2.5 md:py-3 grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-3 border-b border-border/50">
+    <header className="px-3 md:px-6 py-2.5 md:py-3 grid grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-3 border-b border-border/50">
       <div className="flex items-center gap-2.5 md:gap-3 min-w-0">
         <Logo />
         <div className="min-w-0">
@@ -138,20 +149,35 @@ function Header({
           </div>
         </div>
       </div>
-      <div className="order-3 md:order-none col-span-2 md:col-span-1 flex items-center justify-center rounded-md border border-border/70 p-1 bg-background/30">
+      <nav
+        aria-label="Seções do site"
+        className="order-3 lg:order-none col-span-2 lg:col-span-1 flex items-center justify-center rounded-md border border-border/70 p-1 bg-background/30"
+      >
         <button
+          type="button"
           onClick={() => onTabChange("compass")}
-          className={`flex-1 md:flex-none px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "compass" ? "bg-cyber-cyan/10 text-cyber-cyan text-glow" : "opacity-60 hover:opacity-100"}`}
+          aria-pressed={activeTab === "compass"}
+          className={`flex-1 md:flex-none whitespace-nowrap px-1.5 sm:px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "compass" ? "bg-cyber-cyan/10 text-cyber-cyan text-glow" : "opacity-60 hover:opacity-100"}`}
         >
           MAPA IDEOLÓGICO
         </button>
         <button
+          type="button"
           onClick={() => onTabChange("election")}
-          className={`flex-1 md:flex-none px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "election" ? "bg-accent/10 text-accent text-glow" : "opacity-60 hover:opacity-100"}`}
+          aria-pressed={activeTab === "election"}
+          className={`flex-1 md:flex-none whitespace-nowrap px-1.5 sm:px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "election" ? "bg-accent/10 text-accent text-glow" : "opacity-60 hover:opacity-100"}`}
         >
           ELEIÇÕES 2026
         </button>
-      </div>
+        <button
+          type="button"
+          onClick={() => onTabChange("about")}
+          aria-pressed={activeTab === "about"}
+          className={`flex-1 md:flex-none whitespace-nowrap px-1.5 sm:px-2.5 md:px-3 py-1.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider sm:tracking-widest transition-all ${activeTab === "about" ? "bg-brasil-green/10 text-brasil-green" : "opacity-60 hover:opacity-100"}`}
+        >
+          SOBRE
+        </button>
+      </nav>
       <div className="flex items-center justify-end gap-1.5 md:gap-3">
         <div className="hidden md:flex items-center gap-2 text-[10px] font-mono opacity-70">
           <span className="w-1.5 h-1.5 rounded-full bg-primary blink" />
@@ -171,7 +197,7 @@ function Header({
           onClick={onReset}
           aria-label="Reiniciar mapa ideológico"
           title="Reiniciar mapa ideológico"
-          className={`${activeTab === "election" ? "invisible" : ""} mobile-reset inline-flex items-center gap-1.5 text-[10px] font-mono p-2 md:px-3 md:py-1.5 rounded border border-border hover:border-accent hover:text-accent transition-colors tracking-widest`}
+          className={`${activeTab !== "compass" ? "invisible" : ""} mobile-reset inline-flex items-center gap-1.5 text-[10px] font-mono p-2 md:px-3 md:py-1.5 rounded border border-border hover:border-accent hover:text-accent transition-colors tracking-widest`}
         >
           <span className="hidden md:inline">RESET</span>
           <RotateCcw size={13} aria-hidden="true" />
