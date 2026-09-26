@@ -4,7 +4,6 @@ import { Compass } from "@/components/Compass";
 import { QuizPanel } from "@/components/QuizPanel";
 import { SidePanel } from "@/components/SidePanel";
 import { RankingPanel } from "@/components/RankingPanel";
-import { BootScreen } from "@/components/BootScreen";
 import { ElectionPanel } from "@/components/ElectionPanel";
 import { SupportModal } from "@/components/SupportModal";
 import { useCompass } from "@/store/compass";
@@ -17,13 +16,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Central futurista de análise ideológica brasileira para as eleições de 2026. Political compass interativo com 50+ correntes e 200+ proposições.",
+          "Explore seu mapa ideológico, compare propostas de seis candidatos e crie um card para compartilhar após 30 respostas.",
       },
       { property: "og:title", content: "Brasil Político 2026" },
       {
         property: "og:description",
-        content:
-          "Explore o espectro ideológico brasileiro em uma central interativa cyber-institucional.",
+        content: "Responda, descubra suas afinidades e compartilhe seu mapa político.",
       },
     ],
   }),
@@ -31,19 +29,16 @@ export const Route = createFileRoute("/")({
 });
 
 export function Page() {
-  const [booting, setBooting] = useState(true);
   const [activeTab, setActiveTab] = useState<"compass" | "election">("compass");
   const [supportOpen, setSupportOpen] = useState(false);
   const reset = useCompass((s) => s.reset);
   const shuffle = useCompass((s) => s.shuffle);
-  const startSimulation = useCompass((s) => s.startSimulation);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 800, h: 520 });
 
   useEffect(() => {
     shuffle();
   }, [shuffle]);
-  useEffect(() => startSimulation(), [startSimulation]);
 
   useEffect(() => {
     const calc = () => {
@@ -60,12 +55,10 @@ export function Page() {
       ro.disconnect();
       window.removeEventListener("resize", calc);
     };
-  }, [booting]);
+  }, []);
 
   return (
     <div className="h-[100dvh] min-h-[100dvh] w-full overflow-hidden text-foreground relative">
-      {booting && <BootScreen onDone={() => setBooting(false)} />}
-
       <div
         className="pointer-events-none absolute inset-0 opacity-60"
         style={{
@@ -84,16 +77,16 @@ export function Page() {
         />
 
         {activeTab === "compass" ? (
-          <main className="flex-1 min-h-0 px-2.5 sm:px-3 md:px-5 pb-3 md:pb-5 overflow-y-auto lg:overflow-hidden scroll-cyber">
-            <div className="min-h-full lg:h-full grid grid-cols-1 lg:grid-cols-[300px_1fr_320px] gap-3 lg:gap-4">
-              <div className="hidden lg:block h-full min-h-0 overflow-hidden">
+          <main className="flex-1 min-h-0 px-3 sm:px-5 xl:px-7 py-4 overflow-y-auto scroll-cyber">
+            <div className="mx-auto max-w-[1800px] grid grid-cols-1 lg:grid-cols-[minmax(220px,260px)_minmax(0,1fr)_minmax(235px,280px)] 2xl:grid-cols-[minmax(250px,290px)_minmax(0,1fr)_minmax(260px,310px)] gap-4 items-start">
+              <div className="order-2 lg:order-1 min-w-0">
                 <SidePanel />
               </div>
 
-              <div className="flex flex-col gap-3 min-h-0 pt-3 lg:pt-0">
+              <div className="order-1 lg:order-2 flex flex-col gap-4 min-w-0">
                 <div
                   ref={wrapRef}
-                  className="h-[min(56vh,480px)] min-h-[350px] sm:h-[520px] lg:h-auto lg:flex-1 lg:min-h-0 w-full"
+                  className="h-[min(56vh,520px)] min-h-[340px] sm:h-[min(62vh,590px)] lg:h-[clamp(400px,58dvh,680px)] min-w-0 w-full"
                 >
                   <Compass width={dims.w} height={dims.h} />
                 </div>
@@ -102,14 +95,9 @@ export function Page() {
                 </div>
               </div>
 
-              <div className="hidden lg:block h-full min-h-0 overflow-hidden">
+              <div className="order-3 min-w-0">
                 <RankingPanel />
               </div>
-            </div>
-
-            <div className="lg:hidden mt-3 space-y-3 pb-[max(0px,env(safe-area-inset-bottom))]">
-              <SidePanel />
-              <RankingPanel />
             </div>
           </main>
         ) : (
@@ -142,11 +130,11 @@ function Header({
       <div className="flex items-center gap-2.5 md:gap-3 min-w-0">
         <Logo />
         <div className="min-w-0">
-          <h1 className="text-[13px] md:text-base font-semibold tracking-tight whitespace-nowrap">
+          <h1 className="text-[11px] sm:text-[13px] md:text-base font-semibold tracking-tight whitespace-nowrap">
             BRASIL POLÍTICO <span className="text-accent text-glow">2026</span>
           </h1>
           <div className="hidden sm:block text-[10px] font-mono opacity-60 tracking-widest truncate">
-            CENTRAL · MAPA IDEOLÓGICO INTERATIVO
+            DESCUBRA SEU LUGAR NO MAPA
           </div>
         </div>
       </div>
@@ -167,11 +155,12 @@ function Header({
       <div className="flex items-center justify-end gap-1.5 md:gap-3">
         <div className="hidden md:flex items-center gap-2 text-[10px] font-mono opacity-70">
           <span className="w-1.5 h-1.5 rounded-full bg-primary blink" />
-          PAINEL ATIVO
+          SEU MAPA
         </div>
         <button
           onClick={onOpenSupport}
           className="support-trigger"
+          aria-label="Apoiar o projeto"
           aria-haspopup="dialog"
           aria-expanded={supportOpen}
         >

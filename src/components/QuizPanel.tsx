@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useCompass, useCurrentQuestion, type AnswerValue } from "@/store/compass";
 import { ShareIdeology } from "@/components/ShareIdeology";
+import { RESULT_QUESTIONS } from "@/data/config";
 
 const OPTIONS: { v: AnswerValue; label: string; short: string }[] = [
   { v: -2, label: "Discordo totalmente", short: "−−" },
@@ -12,13 +13,12 @@ const OPTIONS: { v: AnswerValue; label: string; short: string }[] = [
 
 export function QuizPanel() {
   const q = useCurrentQuestion();
-  const cursor = useCompass((s) => s.cursor);
+  const answered = useCompass((s) => Object.keys(s.answers).length);
   const answer = useCompass((s) => s.answer);
   const skip = useCompass((s) => s.skip);
-  const total = useCompass((s) => s.queue.length);
 
   if (!q) return null;
-  const progress = ((cursor % total) / total) * 100;
+  const progress = Math.min(100, (answered / RESULT_QUESTIONS) * 100);
 
   return (
     <div className="glass-strong rounded-lg p-3 sm:p-4 hud-corner">
@@ -33,7 +33,9 @@ export function QuizPanel() {
           </span>
         </div>
         <div className="hidden sm:block text-[10px] font-mono opacity-60 shrink-0">
-          QUESTÃO EM ANÁLISE
+          {answered < RESULT_QUESTIONS
+            ? `CARD EM ${RESULT_QUESTIONS - answered} RESPOSTAS`
+            : "CARD LIBERADO"}
         </div>
       </div>
 
@@ -77,9 +79,7 @@ export function QuizPanel() {
       </div>
 
       <div className="mt-3 flex items-center justify-between gap-2 text-[9px] sm:text-[10px] font-mono opacity-60">
-        <span className="truncate">
-          peso vetorial · X {q.axisX.toFixed(1)} · Y {q.axisY.toFixed(1)}
-        </span>
+        <span className="truncate">Sua resposta move seu ponto no mapa.</span>
         <button onClick={skip} className="hover:text-cyber-cyan transition-colors">
           pular ›
         </button>

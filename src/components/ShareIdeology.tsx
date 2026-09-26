@@ -1,33 +1,42 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { Download, LockKeyhole, Share2, X } from "lucide-react";
-import { getIdeologyFigures } from "@/data/ideologyFigures";
+import { Check, Copy, Download, LockKeyhole, Share2, X } from "lucide-react";
+import { getCandidateAffinity, type Candidate } from "@/data/election2026";
+import { RESULT_QUESTIONS } from "@/data/config";
 import { ideologies, type Ideology } from "@/data/ideologies";
-import { questions } from "@/data/questions";
 import { useCompass } from "@/store/compass";
 
 const SHARE_URL = "tinyurl.com/brasilpolitico";
-const REQUIRED_ANSWERS = Math.ceil(questions.length * 0.2);
+const REQUIRED_ANSWERS = RESULT_QUESTIONS;
+
+async function copyPageLink() {
+  await navigator.clipboard.writeText(window.location.href.split("#")[0]);
+}
 
 export function ShareIdeology() {
   const x = useCompass((state) => state.x);
   const y = useCompass((state) => state.y);
   const answered = useCompass((state) => Object.keys(state.answers).length);
   const [open, setOpen] = useState(false);
+  const [linkStatus, setLinkStatus] = useState("");
 
   const unlocked = answered >= REQUIRED_ANSWERS;
   const progress = Math.min(100, (answered / REQUIRED_ANSWERS) * 100);
+  const remaining = Math.max(0, REQUIRED_ANSWERS - answered);
+  const stage = remaining === 0 ? "ready" : remaining <= 15 ? "near" : "start";
 
   return (
     <>
-      <div className="share-unlock">
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex items-center justify-between gap-3 text-[9px] font-mono tracking-wider">
-            <span className={unlocked ? "text-accent" : "opacity-65"}>
-              {unlocked ? "RESULTADO LIBERADO" : "LIBERAR COMPARTILHAMENTO"}
-            </span>
-            <span className="shrink-0 tabular-nums opacity-70">
-              {Math.min(answered, REQUIRED_ANSWERS)}/{REQUIRED_ANSWERS} respostas
+      <div className={`share-unlock share-${stage}`}>
+        <div className="share-count" aria-live="polite">
+          <strong>{remaining}</strong>
+          <span>{unlocked ? "resultado liberado" : "perguntas para liberar seu card"}</span>
+        </div>
+        <div className="share-progress-area">
+          <div className="share-progress-label">
+            <span>SEU RESULTADO PARA COMPARTILHAR</span>
+            <span>
+              {Math.min(answered, REQUIRED_ANSWERS)}/{REQUIRED_ANSWERS}
             </span>
           </div>
           <div
@@ -42,10 +51,7 @@ export function ShareIdeology() {
               className="h-full rounded-full transition-[width] duration-500"
               style={{
                 width: `${progress}%`,
-                background: unlocked
-                  ? "linear-gradient(90deg, var(--brasil-green), var(--brasil-yellow))"
-                  : "linear-gradient(90deg, var(--brasil-green), var(--cyber-cyan))",
-                boxShadow: "0 0 9px var(--cyber-cyan)",
+                background: "var(--share-stage-color)",
               }}
             />
           </div>
@@ -62,7 +68,22 @@ export function ShareIdeology() {
           }
         >
           {unlocked ? <Share2 size={14} /> : <LockKeyhole size={14} />}
-          <span>{unlocked ? "COMPARTILHAR" : `FALTAM ${REQUIRED_ANSWERS - answered}`}</span>
+          <span>{unlocked ? "CRIAR MEU CARD" : "CARD BLOQUEADO"}</span>
+        </button>
+        <button
+          type="button"
+          className="copy-page-link"
+          onClick={async () => {
+            try {
+              await copyPageLink();
+              setLinkStatus("Link copiado!");
+            } catch {
+              setLinkStatus("Não foi possível copiar o link.");
+            }
+          }}
+        >
+          {linkStatus === "Link copiado!" ? <Check size={14} /> : <Copy size={14} />}
+          {linkStatus || "Copiar link da página"}
         </button>
       </div>
 
@@ -73,6 +94,7 @@ export function ShareIdeology() {
 
 function ShareDialog({ x, y, onClose }: { x: number; y: number; onClose: () => void }) {
   const ideology = useMemo(() => getClosestIdeology(x, y), [x, y]);
+  const candidate = useMemo(() => getCandidateAffinity(x, y)[0], [x, y]);
   const [blob, setBlob] = useState<Blob | null>(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [status, setStatus] = useState("Gerando sua imagem…");
@@ -81,7 +103,7 @@ function ShareDialog({ x, y, onClose }: { x: number; y: number; onClose: () => v
     let active = true;
     let objectUrl = "";
 
-    createShareImage(ideology, x, y)
+    createShareImage(ideology, candidate, x, y)
       .then((imageBlob) => {
         if (!active) return;
         objectUrl = URL.createObjectURL(imageBlob);
@@ -97,7 +119,7 @@ function ShareDialog({ x, y, onClose }: { x: number; y: number; onClose: () => v
       active = false;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [ideology, x, y]);
+  }, [ideology, candidate, x, y]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -125,7 +147,7 @@ function ShareDialog({ x, y, onClose }: { x: number; y: number; onClose: () => v
       await navigator.share({
         files: [file],
         title: `Minha ideologia: ${ideology.name}`,
-        text: `Meu resultado no Brasil Político foi ${ideology.name}. Faça o teste: https://${SHARE_URL}`,
+        text: `Meu resultado no Brasil Político foi ${ideology.name}; meu candidato mais próximo no mapa é ${candidate.ballotName}. Faça o teste: ${window.location.href.split("#")[0]}`,
       });
       setStatus("Imagem compartilhada.");
     } catch (error) {
@@ -188,7 +210,12 @@ function ShareDialog({ x, y, onClose }: { x: number; y: number; onClose: () => v
           )}
         </div>
 
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <p className="share-candidate-caption">
+          Maior afinidade no mapa: <strong>{candidate.name}</strong> · {candidate.proximity}% de
+          proximidade estimada
+        </p>
+
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <button type="button" onClick={share} disabled={!blob} className="share-action primary">
             <Share2 size={16} />
             Compartilhar por apps
@@ -196,6 +223,21 @@ function ShareDialog({ x, y, onClose }: { x: number; y: number; onClose: () => v
           <button type="button" onClick={download} disabled={!blob} className="share-action">
             <Download size={16} />
             Baixar imagem
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await copyPageLink();
+                setStatus("Link da página copiado.");
+              } catch {
+                setStatus("Não foi possível copiar o link.");
+              }
+            }}
+            className="share-action"
+          >
+            <Copy size={16} />
+            Copiar link
           </button>
         </div>
         <p
@@ -226,7 +268,12 @@ function plainDescription(markdown: string) {
     .trim();
 }
 
-async function createShareImage(ideology: Ideology, x: number, y: number): Promise<Blob> {
+async function createShareImage(
+  ideology: Ideology,
+  candidate: Candidate & { proximity: number },
+  x: number,
+  y: number,
+): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = 1080;
   canvas.height = 1350;
@@ -234,7 +281,6 @@ async function createShareImage(ideology: Ideology, x: number, y: number): Promi
   if (!ctx) throw new Error("Canvas indisponível");
 
   const accent = ideology.color;
-  const figures = getIdeologyFigures(ideology);
 
   const background = ctx.createLinearGradient(0, 0, 1080, 1350);
   background.addColorStop(0, "#10293a");
@@ -308,6 +354,15 @@ async function createShareImage(ideology: Ideology, x: number, y: number): Promi
     ctx.fill();
   });
 
+  // Os seis candidatos também aparecem no mesmo mapa do card exportado.
+  getCandidateAffinity(x, y).forEach((item) => {
+    const point = project(item.x, item.y, map);
+    ctx.fillStyle = item.color;
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, item.id === candidate.id ? 9 : 6, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
   const position = project(x, y, map);
   ctx.shadowColor = "#f4d84a";
   ctx.shadowBlur = 28;
@@ -360,19 +415,31 @@ async function createShareImage(ideology: Ideology, x: number, y: number): Promi
 
   ctx.fillStyle = "#74e4e9";
   ctx.font = "600 17px ui-monospace, monospace";
-  ctx.fillText("FIGURAS EM DESTAQUE", 64, 1044);
-  figures.slice(0, 2).forEach((figure, index) => {
-    const cardX = 64 + index * 482;
-    roundedRect(ctx, cardX, 1070, 466, 112, 18);
-    ctx.fillStyle = "rgba(255,255,255,.055)";
-    ctx.fill();
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "700 22px system-ui, sans-serif";
-    ctx.fillText(figure.name, cardX + 22, 1106);
-    ctx.fillStyle = "rgba(255,255,255,.65)";
-    ctx.font = "400 16px system-ui, sans-serif";
-    wrapText(ctx, figure.note, cardX + 22, 1135, 420, 22, 2);
-  });
+  ctx.fillText("CANDIDATO MAIS PRÓXIMO NO MAPA", 64, 1044);
+  roundedRect(ctx, 64, 1070, 952, 112, 18);
+  ctx.fillStyle = "rgba(255,255,255,.055)";
+  ctx.fill();
+  ctx.fillStyle = candidate.color;
+  ctx.fillRect(64, 1070, 8, 112);
+  ctx.font = "700 31px system-ui, sans-serif";
+  ctx.fillText(candidate.name, 92, 1115);
+  ctx.fillStyle = "rgba(255,255,255,.72)";
+  ctx.font = "500 18px system-ui, sans-serif";
+  ctx.fillText(candidate.spectrum, 92, 1150);
+  ctx.textAlign = "right";
+  ctx.fillStyle = candidate.color;
+  ctx.font = "700 34px system-ui, sans-serif";
+  ctx.fillText(`${candidate.proximity}%`, 985, 1117);
+  ctx.font = "500 14px system-ui, sans-serif";
+  ctx.fillText("PROXIMIDADE ESTIMADA", 985, 1149);
+  ctx.textAlign = "left";
+  ctx.fillStyle = "rgba(255,255,255,.48)";
+  ctx.font = "400 13px system-ui, sans-serif";
+  ctx.fillText(
+    "Afinidade editorial pelas coordenadas dos planos; não é intenção de voto.",
+    64,
+    1201,
+  );
 
   const cta = ctx.createLinearGradient(64, 1213, 1016, 1292);
   cta.addColorStop(0, "#1b8b66");

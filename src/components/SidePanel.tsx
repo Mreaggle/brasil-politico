@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 export function SidePanel() {
   const x = useCompass((s) => s.x);
   const y = useCompass((s) => s.y);
-  const affinities = useAffinities(20);
+  const affinities = useAffinities(8);
   const trail = useCompass((s) => s.trail);
 
   const econ = x < -1 ? "Coletivista" : x > 1 ? "Liberal" : "Centro";
@@ -12,7 +12,7 @@ export function SidePanel() {
 
   return (
     <aside className="flex flex-col gap-3 w-full h-full min-h-0">
-      <Card title="DIAGNÓSTICO" badge="LIVE">
+      <Card title="SEU DIAGNÓSTICO" badge="SEU PONTO">
         <div className="grid grid-cols-2 gap-2 text-xs font-mono">
           <Stat label="EIXO X" value={x.toFixed(2)} hint={econ} />
           <Stat label="EIXO Y" value={y.toFixed(2)} hint={social} />

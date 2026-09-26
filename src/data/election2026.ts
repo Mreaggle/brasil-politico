@@ -3,143 +3,221 @@ export type Candidate = {
   name: string;
   ballotName: string;
   party: string;
-  average: number;
   color: string;
   role: string;
-  brief: string;
-  agenda: string;
-  ideologies: string[];
+  spectrum: string;
+  x: number;
+  y: number;
+  summary: string[];
+  planUrl: string;
+  contextUrl: string;
 };
 
-export const electionUpdatedAt = "4 de agosto de 2026";
-
+// Coordenadas editoriais: X = economia, Y = costumes e exercício do poder.
+// São leituras dos planos e discursos, não posições declaradas pelas campanhas.
 export const candidates: Candidate[] = [
   {
     id: "lula",
     name: "Luiz Inácio Lula da Silva",
     ballotName: "Lula",
     party: "PT",
-    average: 40,
-    color: "oklch(0.65 0.24 25)",
-    role: "Presidente da República e candidato à reeleição",
-    brief:
-      "Metalúrgico e líder sindical, fundou o PT e presidiu o Brasil entre 2003 e 2010, retornando ao Planalto em 2023. Chega à sua sétima disputa presidencial com Geraldo Alckmin novamente na vice.",
-    agenda:
-      "Combina ampliação de políticas sociais, valorização do salário mínimo, investimento público, reindustrialização e maior presença do Estado na coordenação econômica.",
-    ideologies: ["Centro-esquerda", "Trabalhismo", "Social-democracia", "Desenvolvimentismo"],
+    color: "#ed7566",
+    role: "Presidente da República",
+    spectrum: "Centro-esquerda · desenvolvimentista",
+    x: -4.4,
+    y: -0.8,
+    summary: [
+      "Fortalecer SUS, educação pública e proteção social.",
+      "Reindustrializar com coordenação estatal e transição energética.",
+      "Defender trabalho, democracia e soberania nacional.",
+    ],
+    planUrl:
+      "https://pt.org.br/wp-content/uploads/2026/08/08_06_JOB838_PT_livroplanodegoverno_260616_BOOK%20210x297mm_pg_solta_web.pdf",
+    contextUrl: "https://apnews.com/article/767e63e2ffd5a2898c84f290de816ff7",
   },
   {
     id: "flavio",
     name: "Flávio Bolsonaro",
     ballotName: "Flávio Bolsonaro",
     party: "PL",
-    average: 34,
-    color: "oklch(0.55 0.20 245)",
+    color: "#a798ef",
     role: "Senador pelo Rio de Janeiro",
-    brief:
-      "Advogado e senador desde 2019, foi deputado estadual por quatro mandatos. Foi escolhido pelo PL e pelo ex-presidente Jair Bolsonaro para representar o campo bolsonarista na disputa nacional.",
-    agenda:
-      "Defende valores conservadores, segurança pública mais rígida, redução do tamanho do Estado, agenda econômica pró-mercado e continuidade do movimento político liderado por seu pai.",
-    ideologies: [
-      "Direita populista",
-      "Conservadorismo nacional",
-      "Liberalismo econômico",
-      "Direita religiosa",
+    spectrum: "Direita · liberal conservadora",
+    x: 5.3,
+    y: 4.6,
+    summary: [
+      "Reduzir impostos e gastos; rever a reforma tributária.",
+      "Endurecer o combate às facções e ampliar vigilância criminal.",
+      "Priorizar família, propriedade privada e liberdade religiosa.",
     ],
-  },
-  {
-    id: "caiado",
-    name: "Ronaldo Caiado",
-    ballotName: "Ronaldo Caiado",
-    party: "PSD",
-    average: 5,
-    color: "oklch(0.80 0.20 130)",
-    role: "Ex-governador de Goiás",
-    brief:
-      "Médico ortopedista e produtor rural, construiu uma longa carreira como deputado federal, senador e governador de Goiás. Disputou a Presidência em 1989 e retorna como alternativa de direita à polarização.",
-    agenda:
-      "Projeta nacionalmente sua gestão em Goiás, com ênfase em segurança pública, responsabilidade fiscal, agronegócio, municipalismo e serviços públicos administrados por metas.",
-    ideologies: [
-      "Centro-direita agrária",
-      "Conservadorismo institucional",
-      "Segurança punitivista",
-      "Liberalismo conservador",
-    ],
+    planUrl: "https://www.flaviobolsonaro.com.br/plano-de-governo/leitura",
+    contextUrl:
+      "https://www.cnnbrasil.com.br/eleicoes/flavio-vou-ser-um-presidente-muito-duro-na-seguranca-publica/",
   },
   {
     id: "renan",
     name: "Renan Santos",
     ballotName: "Renan Santos",
     party: "Missão",
-    average: 3,
-    color: "oklch(0.80 0.16 210)",
+    color: "#6fcbd0",
     role: "Presidente do Partido Missão",
-    brief:
-      "Cofundador do Movimento Brasil Livre, estreia como candidato a cargo eletivo. Sua candidatura também marca a primeira eleição presidencial do partido Missão, criado a partir do MBL.",
-    agenda:
-      "Apresenta uma direita liberal de renovação geracional, com reformas econômicas, combate a privilégios, endurecimento contra o crime organizado e comunicação fortemente digital.",
-    ideologies: [
-      "Liberalismo econômico",
-      "Anti-establishment digital",
-      "Direita reformista",
-      "Conservadorismo liberal",
+    spectrum: "Direita · reformista nacional",
+    x: 3.7,
+    y: 2.8,
+    summary: [
+      "Defender ajuste fiscal e mudanças no pacto federativo.",
+      "Combater facções e investir em infraestrutura e indústria.",
+      "Preservar estatais estratégicas, como Petrobras e Embrapa.",
     ],
+    planUrl: "https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/280017002789",
+    contextUrl:
+      "https://www.bol.uol.com.br/noticias/2026/09/08/renan-santos-diz-que-e-contra-privatizacao-da-petrobras-e-embrapa-mas-nao-dos-correios.htm",
+  },
+  {
+    id: "cury",
+    name: "Augusto Cury",
+    ballotName: "Augusto Cury",
+    party: "Avante",
+    color: "#e6bd7a",
+    role: "Escritor e candidato",
+    spectrum: "Centro · empreendedorismo social",
+    x: 0.9,
+    y: -1.1,
+    summary: [
+      "Priorizar educação integral e saúde emocional.",
+      "Criar crédito e formação para microempreendedores.",
+      "Propor mudanças no STF e ampliar energia limpa.",
+    ],
+    planUrl: "https://static.poder360.com.br/uploads/2026/08/Plano_gov_Augusto_Cury_2026.pdf",
+    contextUrl:
+      "https://agenciabrasil.ebc.com.br/politica/noticia/2026-09/augusto-cury-propoe-mandato-de-oito-anos-no-stf-e-semipresidencialismo",
+  },
+  {
+    id: "caiado",
+    name: "Ronaldo Caiado",
+    ballotName: "Ronaldo Caiado",
+    party: "PSD",
+    color: "#9dc884",
+    role: "Ex-governador de Goiás",
+    spectrum: "Centro-direita · conservadora",
+    x: 3.0,
+    y: 3.7,
+    summary: [
+      "Criar Ministério da Segurança e integrar inteligência policial.",
+      "Combinar responsabilidade fiscal, agro e infraestrutura.",
+      "Investir em saúde e educação com gestão por resultados.",
+    ],
+    planUrl: "https://ronaldocaiado.com.br/plano_de_governo_ronaldo_caiado_presidente.pdf",
+    contextUrl:
+      "https://www.cnnbrasil.com.br/eleicoes/caiado-propoe-ia-para-unir-dados-financeiros-do-pais-e-asfixiar-o-crime/",
   },
   {
     id: "zema",
     name: "Romeu Zema",
     ballotName: "Romeu Zema",
     party: "Novo",
-    average: 2,
-    color: "oklch(0.74 0.20 55)",
+    color: "#efa26a",
     role: "Ex-governador de Minas Gerais",
-    brief:
-      "Empresário eleito governador de Minas Gerais em 2018 e reeleito em primeiro turno em 2022. Deixou o governo estadual para disputar a Presidência e escolheu Eduardo Girão como vice.",
-    agenda:
-      "Leva à campanha uma plataforma de privatizações, ajuste fiscal, simplificação do Estado, ambiente favorável a empresas e descentralização administrativa.",
-    ideologies: ["Liberalismo econômico", "Direita tecnocrática", "Privatismo", "Federalismo"],
+    spectrum: "Direita · liberal econômica",
+    x: 6.2,
+    y: 1.6,
+    summary: [
+      "Privatizar estatais e reduzir gastos e privilégios.",
+      "Flexibilizar regras trabalhistas e baixar tributos.",
+      "Endurecer a segurança e ampliar ensino técnico.",
+    ],
+    planUrl:
+      "https://zema30.com.br/wp-content/uploads/2026/08/Plano-Implacavel-Romeu-Zema-2026.pdf",
+    contextUrl:
+      "https://agenciabrasil.ebc.com.br/politica/noticia/2026-09/zema-propoe-saida-do-brics-e-reducao-de-supersalarios-e-de-impostos",
   },
 ];
 
-export const pollInstitutes = [
-  "Nexus",
-  "Veritá",
-  "AtlasIntel",
-  "Datafolha",
-  "Vox Brasil",
-  "PoderData",
-  "Alfa Inteligência",
-  "Gerp",
-  "Real Time Big Data",
-  "Indexa",
-  "Jota",
-  "Quaest",
-  "100 Cidades",
-  "Boas Ideias",
-  "Nexus/FSB",
-  "Futura Inteligência",
-  "MDA",
-  "American Analytics",
-  "Meio/Ideia",
-  "Paraná Pesquisas",
-  "Vetor",
+export type Poll = {
+  institute: string;
+  published: string;
+  fieldwork: string;
+  sample: number;
+  margin: string;
+  registration: string;
+  scenario: string;
+  sourceUrl: string;
+  results: Record<string, number>;
+};
+
+export const polls: Poll[] = [
+  {
+    institute: "Palver",
+    published: "24/09/2026",
+    fieldwork: "20 a 23/09/2026",
+    sample: 5000,
+    margin: "±2,5 p.p.",
+    registration: "BR-09587/2026",
+    scenario: "1º turno estimulado, Brasil",
+    sourceUrl:
+      "https://www.bol.uol.com.br/noticias/2026/09/24/palver-lula-e-flavio-tem-empate-tecnico-no-1-e-no-2-turno.ghtm",
+    results: { lula: 43, flavio: 43, renan: 8, cury: 2, caiado: 1, zema: 1 },
+  },
+  {
+    institute: "Real Time Big Data",
+    published: "24/09/2026",
+    fieldwork: "19 a 23/09/2026",
+    sample: 2000,
+    margin: "±2 p.p.",
+    registration: "BR-04202/2026",
+    scenario: "1º turno estimulado, Brasil",
+    sourceUrl:
+      "https://exame.com/brasil/pesquisa-real-time-big-data-flavio-bolsonaro-cresce-7-pontos-e-empata-com-lula-no-1o-turno/",
+    results: { lula: 41, flavio: 37, cury: 6, renan: 6, caiado: 2, zema: 1 },
+  },
+  {
+    institute: "AtlasIntel / Bloomberg",
+    published: "23/09/2026",
+    fieldwork: "17 a 22/09/2026",
+    sample: 5015,
+    margin: "±1 p.p.",
+    registration: "BR-04739/2026",
+    scenario: "1º turno estimulado, Brasil",
+    sourceUrl: "https://atlasintel.org/poll/brazil-national-2026-09-23",
+    results: { lula: 45.8, flavio: 43.4, renan: 4.5, cury: 2.1, caiado: 1.3, zema: 0.9 },
+  },
+  {
+    institute: "Datafolha",
+    published: "21/09/2026",
+    fieldwork: "15 a 17/09/2026",
+    sample: 2001,
+    margin: "±2 p.p.",
+    registration: "BR-04029/2026",
+    scenario: "1º turno estimulado, Brasil",
+    sourceUrl:
+      "https://datafolha.folha.uol.com.br/eleicoes/2026/09/lula-pt-e-flavio-bolsonaro-pl-empatam-no-1o-e-2o-turnos.shtml",
+    results: { lula: 39, flavio: 36, cury: 6, caiado: 4, renan: 3, zema: 2 },
+  },
+  {
+    institute: "Nexus / BTG Pactual",
+    published: "14/09/2026",
+    fieldwork: "11 a 13/09/2026",
+    sample: 2003,
+    margin: "±2 p.p.",
+    registration: "BR-04076/2026",
+    scenario: "1º turno estimulado com Pablo Marçal, Brasil",
+    sourceUrl:
+      "https://www.cnnbrasil.com.br/eleicoes/nexus-btg-no-1-turno-lula-tem-40-flavio-36-e-cury-7/",
+    results: { lula: 40, flavio: 36, cury: 7, caiado: 4, renan: 4, zema: 1 },
+  },
 ];
 
-export const electionSources = [
-  {
-    label: "Agregador UOL — pesquisas nacionais registradas no TSE",
-    url: "https://noticias.uol.com.br/eleicoes/agregador-de-pesquisas-eleitorais/",
-  },
-  {
-    label: "Agregador BBC Brasil / PollingData",
-    url: "https://news.test.files.bbci.co.uk/include/vjamericas/1561-poll-tracker-brazil-2026/poll-tracker/portuguese/app/embed",
-  },
-  {
-    label: "Índice CNN / Ipespe Analítica",
-    url: "https://www.cnnbrasil.com.br/eleicoes/indice-cnn-saiba-como-funciona-o-agregador-de-pesquisas-das-eleicoes-2026/",
-  },
-  {
-    label: "Sistema de Registro de Pesquisas Eleitorais do TSE",
-    url: "https://pesqele-divulgacao.tse.jus.br/app/pesquisa/listar.xhtml",
-  },
-];
+export const latestPoll = polls[0];
+export const electionUpdatedAt = "24 de setembro de 2026";
+
+export function getCandidateAffinity(x: number, y: number) {
+  return candidates
+    .map((candidate) => {
+      const distance = Math.hypot(candidate.x - x, candidate.y - y);
+      return {
+        ...candidate,
+        proximity: Math.max(0, Math.round((1 - distance / Math.sqrt(200)) * 100)),
+      };
+    })
+    .sort((a, b) => b.proximity - a.proximity);
+}

@@ -437,4 +437,26 @@ export const questions: Question[] = [
   Q(422, 'Cultura', 'Conteúdo nacional em streamings deve ter cota mínima.', -1.0, 0.8),
   Q(423, 'Mercado', 'Compras públicas devem priorizar pequenas empresas locais.', -1.0, 0.4),
   Q(424, 'Inovação', 'Marco legal das criptomoedas deve ser favorável à inovação.', 1.6, -0.4),
+  Q(
+    425,
+    "Atualidades",
+    "Donald Trump age como um imperador nas relações internacionais.",
+    -0.4,
+    -1.2,
+  ),
+  Q(
+    426,
+    "Atualidades",
+    "O Brasil deveria entregar o controle de suas terras raras aos Estados Unidos.",
+    1.2,
+    0.8,
+  ),
+  Q(
+    427,
+    "Atualidades",
+    "As ações militares de Israel são justificadas como defesa contra ataques terroristas.",
+    0.6,
+    1.2,
+  ),
+  Q(428, "Atualidades", "A Palestina deveria ser livre e ter um Estado independente.", -0.8, -0.8),
 ];

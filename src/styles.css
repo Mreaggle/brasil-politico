@@ -110,15 +110,13 @@
     font-family: var(--font-mono);
   }
   .text-glow {
-    text-shadow:
-      0 0 12px currentColor,
-      0 0 30px color-mix(in oklch, currentColor 40%, transparent);
+    text-shadow: none;
   }
   .glass {
-    background: color-mix(in oklch, var(--card) 60%, transparent);
+    background: color-mix(in oklch, var(--card) 78%, transparent);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid color-mix(in oklch, var(--cyber-cyan) 18%, transparent);
+    border: 1px solid color-mix(in oklch, var(--cyber-cyan) 14%, transparent);
   }
   .glass-strong {
     background: color-mix(in oklch, var(--card) 85%, transparent);
@@ -126,17 +124,14 @@
     border: 1px solid color-mix(in oklch, var(--cyber-cyan) 25%, transparent);
   }
   .neon-border {
-    box-shadow:
-      0 0 0 1px color-mix(in oklch, var(--cyber-cyan) 40%, transparent),
-      0 0 20px color-mix(in oklch, var(--cyber-cyan) 25%, transparent),
-      inset 0 0 20px color-mix(in oklch, var(--cyber-cyan) 8%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklch, var(--cyber-cyan) 25%, transparent);
   }
   .hud-corner {
     position: relative;
   }
   .hud-corner::before,
   .hud-corner::after {
-    content: "";
+    content: none;
     position: absolute;
     width: 12px;
     height: 12px;
@@ -157,13 +152,7 @@
   }
 
   .scanlines {
-    background-image: repeating-linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 2px,
-      var(--scan-color) 2px,
-      var(--scan-color) 3px
-    );
+    background-image: none;
   }
   .grid-bg {
     background-image:
@@ -217,7 +206,7 @@
     }
   }
   .blink {
-    animation: blink 1.4s steps(2, end) infinite;
+    animation: none;
   }
 
   .scroll-cyber {
@@ -271,14 +260,85 @@
       border-color 160ms ease,
       box-shadow 160ms ease;
   }
+  @media (max-width: 360px) {
+    .support-trigger span {
+      display: none;
+    }
+    .support-trigger {
+      width: 34px;
+      padding-inline: 0;
+    }
+  }
 
   .share-unlock {
-    display: flex;
+    --share-stage-color: #f17d76;
+    display: grid;
+    grid-template-columns: auto minmax(120px, 1fr) auto;
     align-items: center;
     gap: 12px;
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid color-mix(in oklch, var(--cyber-cyan) 16%, transparent);
+    position: relative;
+    padding-bottom: 32px;
+  }
+  .share-near {
+    --share-stage-color: #f4cf70;
+  }
+  .share-ready {
+    --share-stage-color: #77d7a0;
+  }
+  .share-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--share-stage-color);
+  }
+  .share-count strong {
+    font-size: 32px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .share-count span {
+    max-width: 94px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .share-progress-area {
+    min-width: 0;
+  }
+  .share-progress-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 7px;
+    font: 600 9px var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--share-stage-color);
+  }
+  .copy-page-link {
+    position: absolute;
+    bottom: 1px;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--cyber-cyan);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .copy-page-link:hover {
+    color: var(--foreground);
+  }
+  .share-candidate-caption {
+    font-size: 12px;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+  .share-candidate-caption strong {
+    color: var(--foreground);
   }
 
   .share-trigger {
@@ -311,7 +371,7 @@
     color: var(--muted-foreground);
     border-color: var(--border);
     background: transparent;
-    opacity: 0.65;
+    opacity: 0.8;
   }
 
   .share-dialog {
@@ -390,15 +450,406 @@
 
   @media (max-width: 420px) {
     .share-unlock {
-      align-items: stretch;
-      flex-direction: column;
-      gap: 8px;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
     }
     .share-trigger {
       width: 100%;
+      grid-column: 1 / -1;
     }
     .share-dialog {
       padding: 13px;
+    }
+  }
+
+  .candidate-marker {
+    position: absolute;
+    z-index: 8;
+    display: grid;
+    place-items: center;
+    width: 25px;
+    height: 25px;
+    transform: translate(-50%, -50%);
+    border: 2px solid;
+    border-radius: 7px;
+    background: var(--background);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 45%);
+    font: 800 9px var(--font-mono);
+  }
+  .candidate-marker:hover,
+  .candidate-marker:focus-visible {
+    z-index: 11;
+    transform: translate(-50%, -50%) scale(1.3);
+    background: var(--card);
+  }
+  .map-legend {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 12;
+    display: flex;
+    gap: 10px;
+    padding: 6px 9px;
+    border-radius: 5px;
+    background: var(--background);
+    font: 600 9px var(--font-mono);
+    color: var(--accent);
+  }
+  .map-legend span:first-child {
+    color: #e6bd7a;
+  }
+  .map-legend span:last-child {
+    color: var(--cyber-cyan);
+  }
+  .candidate-map-popover {
+    position: absolute;
+    z-index: 35;
+    left: 10px;
+    bottom: 10px;
+    display: grid;
+    gap: 5px;
+    max-width: min(320px, calc(100% - 80px));
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgb(0 0 0 / 40%);
+    font-size: 11px;
+  }
+  .candidate-map-popover button {
+    position: absolute;
+    top: 3px;
+    right: 8px;
+    font-size: 20px;
+  }
+  .candidate-map-popover strong {
+    padding-right: 18px;
+    font-size: 14px;
+  }
+  .candidate-map-popover span {
+    color: var(--muted-foreground);
+  }
+  .candidate-map-popover a {
+    color: var(--cyber-cyan);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .eyebrow {
+    font: 700 10px var(--font-mono);
+    letter-spacing: 0.12em;
+    color: var(--cyber-cyan);
+  }
+  .affinity-panel,
+  .editorial-card,
+  .election-history,
+  .candidate-card {
+    background: color-mix(in oklch, var(--card) 80%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .affinity-panel {
+    padding: 18px;
+  }
+  .affinity-header h3 {
+    margin: 8px 0 4px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  .affinity-header p,
+  .affinity-method {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  .affinity-list {
+    display: grid;
+    gap: 2px;
+    margin: 16px 0;
+    padding: 0;
+    list-style: none;
+  }
+  .affinity-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .affinity-rank {
+    width: 18px;
+    flex: none;
+    color: var(--muted-foreground);
+    font: 600 10px var(--font-mono);
+  }
+  .candidate-dot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex: none;
+  }
+  .affinity-name {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+  }
+  .affinity-name strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .affinity-name small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 9px;
+    color: var(--muted-foreground);
+  }
+  .affinity-value {
+    font: 700 13px var(--font-mono);
+    color: var(--accent);
+  }
+  .affinity-method {
+    margin: 0;
+  }
+
+  .election-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 18px 70px;
+  }
+  .election-intro {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: end;
+    margin-bottom: 28px;
+  }
+  .election-intro h2 {
+    max-width: 700px;
+    margin: 10px 0 12px;
+    font-size: clamp(34px, 5vw, 64px);
+    line-height: 1.03;
+    letter-spacing: -0.06em;
+    font-weight: 700;
+  }
+  .election-intro p {
+    max-width: 650px;
+    color: var(--muted-foreground);
+    line-height: 1.55;
+  }
+  .election-date {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex: none;
+    font: 600 11px var(--font-mono);
+    color: var(--accent);
+  }
+  .editorial-card,
+  .election-history {
+    padding: clamp(18px, 3vw, 30px);
+    margin-bottom: 18px;
+  }
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 12px;
+  }
+  .section-heading h3,
+  .election-history h3 {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  .section-heading a {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--cyber-cyan);
+  }
+  .method-note {
+    margin: 10px 0 0;
+    max-width: 860px;
+    color: var(--muted-foreground);
+    font-size: 11px;
+    line-height: 1.55;
+  }
+  .poll-list {
+    display: grid;
+    gap: 13px;
+    margin: 26px 0 18px;
+  }
+  .poll-row {
+    display: grid;
+    grid-template-columns: 25px minmax(110px, 220px) minmax(0, 1fr) 58px;
+    gap: 12px;
+    align-items: center;
+  }
+  .poll-rank {
+    color: var(--muted-foreground);
+    font: 600 11px var(--font-mono);
+  }
+  .poll-name {
+    display: grid;
+    min-width: 0;
+  }
+  .poll-name strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .poll-name small {
+    font-size: 10px;
+    color: var(--muted-foreground);
+  }
+  .poll-track {
+    height: 9px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--muted);
+  }
+  .poll-track div {
+    height: 100%;
+    border-radius: inherit;
+  }
+  .poll-value {
+    text-align: right;
+    font: 700 14px var(--font-mono);
+  }
+  .election-history {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) 2fr;
+    gap: 10px 24px;
+  }
+  .history-list {
+    display: grid;
+  }
+  .history-list a {
+    display: grid;
+    grid-template-columns: 80px 1fr auto 16px;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .history-list a:hover {
+    color: var(--cyber-cyan);
+  }
+  .history-list small {
+    color: var(--muted-foreground);
+  }
+  .election-history .method-note {
+    grid-column: 1 / -1;
+  }
+  .candidate-section {
+    padding-top: 20px;
+  }
+  .candidate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .candidate-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 20px;
+    border-top: 3px solid;
+  }
+  .candidate-top {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .candidate-card h4 {
+    margin: 8px 0 2px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .candidate-card small {
+    color: var(--muted-foreground);
+    font-size: 11px;
+  }
+  .candidate-card .spectrum {
+    margin: 18px 0 8px;
+    font-size: 12px;
+  }
+  .candidate-card ul {
+    display: grid;
+    gap: 7px;
+    padding-left: 17px;
+    margin-bottom: 18px;
+    color: var(--foreground);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .candidate-card li::marker {
+    color: var(--cyber-cyan);
+  }
+  .candidate-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .candidate-links a {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
+    color: var(--cyber-cyan);
+    font-size: 11px;
+  }
+  .candidate-links a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 900px) {
+    .candidate-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .election-page {
+      padding-inline: 14px;
+    }
+    .election-intro {
+      display: block;
+    }
+    .election-date {
+      margin-top: 15px;
+    }
+    .poll-row {
+      grid-template-columns: 18px minmax(90px, 130px) minmax(0, 1fr) 48px;
+      gap: 6px;
+    }
+    .poll-name strong {
+      font-size: 11px;
+    }
+    .poll-value {
+      font-size: 11px;
+    }
+    .election-history {
+      grid-template-columns: 1fr;
+    }
+    .history-list a {
+      grid-template-columns: 68px 1fr 16px;
+    }
+    .history-list small {
+      display: none;
+    }
+    .candidate-grid {
+      grid-template-columns: 1fr;
     }
   }
 

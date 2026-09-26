@@ -4,6 +4,7 @@ import { LocateFixed, Minus, Plus } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { ideologies, type Ideology } from "@/data/ideologies";
 import { getIdeologyFigures } from "@/data/ideologyFigures";
+import { candidates, type Candidate } from "@/data/election2026";
 import { useCompass, useAffinities } from "@/store/compass";
 
 type Props = { width: number; height: number };
@@ -15,6 +16,7 @@ export function Compass({ width, height }: Props) {
   const y = useCompass((s) => s.y);
   const trail = useCompass((s) => s.trail);
   const [hover, setHover] = useState<Ideology | null>(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [mouse, setMouse] = useState({ mx: 0, my: 0 });
   const [view, setView] = useState<MapView>({ scale: 1, x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -83,6 +85,7 @@ export function Compass({ width, height }: Props) {
       className={`relative grid-bg neon-border rounded-lg overflow-hidden hud-corner select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
       style={{ width, height, touchAction: "none" }}
       onWheel={(event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
         event.preventDefault();
         const point = relativePoint(event.clientX, event.clientY);
         zoomAt(viewRef.current.scale * (event.deltaY < 0 ? 1.16 : 0.86), point.x, point.y);
@@ -308,6 +311,33 @@ export function Compass({ width, height }: Props) {
           );
         })}
 
+        {candidates.map((candidate) => {
+          const point = project(candidate.x, candidate.y);
+          return (
+            <button
+              key={candidate.id}
+              type="button"
+              className="candidate-marker"
+              style={{
+                left: point.px,
+                top: point.py,
+                borderColor: candidate.color,
+                color: candidate.color,
+              }}
+              title={`${candidate.name} · ${candidate.spectrum}`}
+              aria-label={`Ver posição editorial de ${candidate.name}`}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={() => setSelectedCandidate(candidate)}
+            >
+              {candidate.ballotName
+                .split(" ")
+                .map((part) => part[0])
+                .slice(0, 2)
+                .join("")}
+            </button>
+          );
+        })}
+
         <svg className="absolute inset-0 pointer-events-none" width={width} height={height}>
           {trail.length > 1 && (
             <polyline
@@ -353,6 +383,29 @@ export function Compass({ width, height }: Props) {
           </div>
         </motion.div>
       </div>
+
+      <div className="map-legend">
+        ● Você <span>◆ Candidatos</span> <span>· Correntes</span>
+      </div>
+      {selectedCandidate && (
+        <div className="candidate-map-popover glass-strong">
+          <button
+            type="button"
+            onClick={() => setSelectedCandidate(null)}
+            aria-label="Fechar posição do candidato"
+          >
+            ×
+          </button>
+          <strong>{selectedCandidate.name}</strong>
+          <span>
+            {selectedCandidate.spectrum} · X {selectedCandidate.x.toFixed(1)} / Y{" "}
+            {selectedCandidate.y.toFixed(1)}
+          </span>
+          <a href={selectedCandidate.planUrl} target="_blank" rel="noreferrer">
+            Ler plano de governo ↗
+          </a>
+        </div>
+      )}
 
       <AnimatePresence>
         {hover && (
